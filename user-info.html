@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 정보</title>
+</head>
+<body>
+<h2>회원 정보</h2>
+<div id="userInfo"></div>
+<button id="editButton">회원정보 수정</button>
+
+<script>
+    async function fetchUserInfo() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+
+        try {
+            const response = await fetch(`/api/users/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                document.getElementById('userInfo').innerHTML = `
+                        <p>아이디 : ${userData.id}</p>
+                        <p>이름 : ${userData.name}</p>
+                        <p>생년월이 : ${userData.birthdate}</p>
+                        <p>이메일 : ${userData.email}</p>
+                    `;
+            } else {
+                document.getElementById('userInfo').textContent = 'Failed to load user information.';
+            }
+        } catch (error) {
+            document.getElementById('userInfo').textContent = `Error: ${error.message}`;
+        }
+    }
+
+    document.getElementById('editButton').addEventListener('click', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        window.location.href = `edit-user.html?id=${userId}`;
+    });
+
+    fetchUserInfo();
+</script>
+</body>
+</html>

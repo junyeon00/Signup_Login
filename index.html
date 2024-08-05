@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<h2>로그인</h2>
+<form id="loginForm">
+    <label for="id">아이디 :</label>
+    <input type="text" id="id" name="id" required>
+    <br>
+    <label for="pw">비밀번호 :</label>
+    <input type="password" id="pw" name="pw" required>
+    <br>
+    <button type="submit">로그인</button>
+</form>
+<p id="loginMessage"></p>
+<button onclick="window.location.href='signup.html'">Sign Up</button>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('id').value;
+        const pw = document.getElementById('pw').value;
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id, pw })
+        });
+
+        const messageElement = document.getElementById('loginMessage');
+        if (response.ok) {
+            window.location.href = `user-info.html?id=${id}`;
+        } else {
+            messageElement.textContent = '잘못된 정보입니다! 다시 시도해주세요!';
+        }
+    });
+</script>
+</body>
+</html>
